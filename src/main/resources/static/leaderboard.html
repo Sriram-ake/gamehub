@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboards - GameHub Arcade</title>
+
+  <!-- Typography Pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    /* Filter Pills */
+    .filter-pills {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+    }
+    .pill-btn {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text-1);
+      font-family: var(--font-heading);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      padding: var(--space-2) var(--space-6);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .pill-btn:hover {
+      background: var(--glass-strong);
+      color: var(--text-0);
+    }
+    .pill-btn.active {
+      background: var(--gradient-brand);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Podium for Top 3 */
+    .podium-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      align-items: flex-end;
+      margin-bottom: var(--space-8);
+      padding: var(--space-6) 0;
+    }
+    .podium-slot {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .podium-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-full);
+      border: 3px solid var(--glass-border);
+      margin-bottom: var(--space-3);
+      object-fit: cover;
+      background: var(--bg-2);
+    }
+    .podium-slot.rank-1 .podium-avatar {
+      width: 80px;
+      height: 80px;
+      border-color: var(--warning);
+      box-shadow: 0 0 25px var(--warning-glow);
+    }
+    .podium-step {
+      width: 100%;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: var(--space-4) var(--space-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .podium-slot.rank-1 .podium-step {
+      height: 140px;
+      background: linear-gradient(180deg, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0.05) 100%);
+      border: 1px solid var(--warning);
+    }
+    .podium-slot.rank-2 .podium-step {
+      height: 105px;
+      background: linear-gradient(180deg, rgba(148, 163, 184, 0.2) 0%, rgba(148, 163, 184, 0.04) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+    .podium-slot.rank-3 .podium-step {
+      height: 85px;
+      background: linear-gradient(180deg, rgba(217, 119, 6, 0.2) 0%, rgba(217, 119, 6, 0.04) 100%);
+      border: 1px solid rgba(217, 119, 6, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      .podium-container {
+        display: none; /* Mobile fallback directly to list */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+      <div style="margin-bottom: var(--space-6);" class="reveal">
+        <h1 style="font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 900; margin-bottom: var(--space-2);">
+          🏆 Arcade Leaderboards
+        </h1>
+        <p style="color: var(--text-1); font-size: var(--fs-base);">
+          Compete with players worldwide. Scores are verified by our server-side anti-cheat validator.
+        </p>
+      </div>
+
+      <!-- Game Selection Pills -->
+      <div class="filter-pills">
+        <button class="pill-btn active" data-board="global">🌐 Global Total</button>
+        <button class="pill-btn" data-board="snake">🐍 Snake</button>
+        <button class="pill-btn" data-board="flappy">🪶 Flappy Bird</button>
+        <button class="pill-btn" data-board="2048">🔢 2048</button>
+        <button class="pill-btn" data-board="tictactoe">❌ Tic Tac Toe</button>
+      </div>
+
+      <!-- Podium for Top 3 -->
+      <div id="podium-area" class="podium-container" style="display: none;">
+        <!-- Rank 2 (Left) -->
+        <div class="podium-slot rank-2" id="podium-2"></div>
+        <!-- Rank 1 (Center) -->
+        <div class="podium-slot rank-1" id="podium-1"></div>
+        <!-- Rank 3 (Right) -->
+        <div class="podium-slot rank-3" id="podium-3"></div>
+      </div>
+
+      <!-- Full Leaderboard Table -->
+      <div class="table-container glass">
+        <table class="game-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">Rank</th>
+              <th>Player</th>
+              <th style="text-align: right;">High Score</th>
+              <th style="text-align: right; width: 140px;">Achieved</th>
+            </tr>
+          </thead>
+          <tbody id="lb-body">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: var(--space-8); color: var(--text-2);">
+                <span class="spinner" style="margin-right: 8px;"></span> Loading rankings...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>GameHub • B.Tech IT Minor Project • Spring Boot & HTML5 Canvas</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar } from '/js/core/navbar.js';
+    import { api } from '/js/core/api.js';
+    import { auth } from '/js/core/auth.js';
+    import { countUp } from '/js/core/utils.js';
+
+    initNavbar('leaderboard');
+
+    let currentBoard = 'global';
+    const currentUser = auth.getUser();
+
+    async function loadBoard(slug) {
+      currentBoard = slug;
+      const tbody = document.getElementById('lb-body');
+      const podiumArea = document.getElementById('podium-area');
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center; padding: var(--space-8); color: var(--text-2);">
+            <span class="spinner" style="margin-right: 8px;"></span> Fetching live rankings...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const endpoint = slug === 'global' ? '/leaderboards/global' : `/leaderboards/${slug}`;
+        const data = await api.get(endpoint);
+
+        if (!data || data.length === 0) {
+          podiumArea.style.display = 'none';
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="4" style="text-align: center; padding: var(--space-8); color: var(--text-2);">
+                🕹️ No high scores recorded yet for this title. Be the first to claim Rank #1!
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        // Render Podium if at least 1 record
+        renderPodium(data);
+
+        // Render Table Rows
+        tbody.innerHTML = data.map((row) => {
+          const isMe = currentUser && (row.userId === currentUser.id || row.username === currentUser.username);
+          let badgeHtml = '';
+          if (row.rank === 1) badgeHtml = '<span class="rank-badge rank-1">🥇</span>';
+          else if (row.rank === 2) badgeHtml = '<span class="rank-badge rank-2">🥈</span>';
+          else if (row.rank === 3) badgeHtml = '<span class="rank-badge rank-3">🥉</span>';
+          else badgeHtml = `<span style="font-family: var(--font-mono); font-weight: 700; color: var(--text-2); padding-left: 6px;">#${row.rank}</span>`;
+
+          return `
+            <tr class="${isMe ? 'current-user-row' : ''}">
+              <td>${badgeHtml}</td>
+              <td>
+                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                  <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--bg-2); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">
+                    ${(row.displayName || row.username || 'P').charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <div style="font-weight: 700; color: var(--text-0);">
+                      ${row.displayName || row.username} ${isMe ? '<span class="badge badge-secondary" style="font-size: 0.65rem; margin-left: 4px;">YOU</span>' : ''}
+                    </div>
+                    <div style="font-size: var(--fs-xs); color: var(--text-2);">@${row.username}</div>
+                  </div>
+                </div>
+              </td>
+              <td style="text-align: right; font-family: var(--font-mono); font-size: var(--fs-lg); font-weight: 700; color: var(--secondary);">
+                ${Number(row.score).toLocaleString()}
+              </td>
+              <td style="text-align: right; font-size: var(--fs-xs); color: var(--text-2);">
+                ${row.achievedAt || 'Recent'}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+      } catch (err) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; padding: var(--space-8); color: var(--danger);">
+              Failed to load leaderboards: ${err.message}
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderPodium(data) {
+      const podiumArea = document.getElementById('podium-area');
+      if (data.length < 1) {
+        podiumArea.style.display = 'none';
+        return;
+      }
+      podiumArea.style.display = 'grid';
+
+      const r1 = data[0];
+      const r2 = data[1] || null;
+      const r3 = data[2] || null;
+
+      // Slot 1 (Center)
+      document.getElementById('podium-1').innerHTML = `
+        <div style="font-size: 1.8rem; margin-bottom: 2px;">👑</div>
+        <div style="font-weight: 700; color: var(--warning); margin-bottom: 4px;">${r1.displayName || r1.username}</div>
+        <div class="podium-step">
+          <div style="font-size: var(--fs-xl); font-weight: 900; font-family: var(--font-display); color: var(--warning);">1st</div>
+          <div style="font-family: var(--font-mono); font-weight: 700; color: var(--text-0);">${Number(r1.score).toLocaleString()} pts</div>
+        </div>
+      `;
+
+      // Slot 2 (Left)
+      document.getElementById('podium-2').innerHTML = r2 ? `
+        <div style="font-size: 1.4rem; margin-bottom: 2px;">🥈</div>
+        <div style="font-weight: 600; color: #cbd5e1; margin-bottom: 4px;">${r2.displayName || r2.username}</div>
+        <div class="podium-step">
+          <div style="font-size: var(--fs-lg); font-weight: 900; font-family: var(--font-display); color: #cbd5e1;">2nd</div>
+          <div style="font-family: var(--font-mono); font-weight: 700; color: var(--text-1);">${Number(r2.score).toLocaleString()} pts</div>
+        </div>
+      ` : '<div style="opacity: 0.3;">Empty</div>';
+
+      // Slot 3 (Right)
+      document.getElementById('podium-3').innerHTML = r3 ? `
+        <div style="font-size: 1.4rem; margin-bottom: 2px;">🥉</div>
+        <div style="font-weight: 600; color: #d97706; margin-bottom: 4px;">${r3.displayName || r3.username}</div>
+        <div class="podium-step">
+          <div style="font-size: var(--fs-lg); font-weight: 900; font-family: var(--font-display); color: #d97706;">3rd</div>
+          <div style="font-family: var(--font-mono); font-weight: 700; color: var(--text-1);">${Number(r3.score).toLocaleString()} pts</div>
+        </div>
+      ` : '<div style="opacity: 0.3;">Empty</div>';
+    }
+
+    // Attach pill click listeners
+    document.querySelectorAll('.pill-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadBoard(btn.getAttribute('data-board'));
+      });
+    });
+
+    // Initial load
+    loadBoard('global');
+  </script>
+</body>
+</html>

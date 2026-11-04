@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe - GameHub Arcade</title>
+
+  <!-- Typography Pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/game.css">
+</head>
+<body data-game="tictactoe">
+
+  <div class="game-viewport">
+    <!-- Top HUD Bar -->
+    <header class="game-hud glass">
+      <a class="btn btn-ghost btn-sm" href="/index.html">← Arcade</a>
+      <h1 class="game-title">❌ Tic Tac Toe</h1>
+      <div class="hud-stats">
+        <div class="hud-item">
+          <span class="hud-label">Wins Score</span>
+          <span class="hud-val" id="hud-score">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Best</span>
+          <span class="hud-val" id="hud-best" style="color: var(--warning);">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Canvas Stage -->
+    <main class="game-stage">
+      <div class="canvas-frame">
+        <canvas id="game-canvas" width="480" height="480"></canvas>
+
+        <!-- Start Overlay -->
+        <div id="start-overlay" class="overlay">
+          <h2 class="overlay-title">TIC TAC TOE</h2>
+          <p class="overlay-subtitle">
+            Tactical grid challenge! You play as glowing cyan <strong style="color: var(--secondary);">X</strong>. Defeat the Minimax AI playing as glowing pink <strong style="color: var(--accent);">O</strong>.
+          </p>
+          <button id="btn-start" class="btn btn-primary btn-lg">
+            ▶ Play Match
+          </button>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="overlay hidden">
+          <h2 class="overlay-title" style="color: var(--warning);">PAUSED</h2>
+          <p class="overlay-subtitle">Match suspended.</p>
+          <button id="btn-resume" class="btn btn-primary btn-lg">
+            Resume
+          </button>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="game-over-overlay" class="overlay hidden">
+          <h2 id="go-title" class="overlay-title">MATCH OVER</h2>
+          <div class="overlay-stats">
+            <div class="overlay-stat-item">
+              <span class="overlay-stat-lbl">Points</span>
+              <span id="go-final-score" class="overlay-stat-val">0</span>
+            </div>
+            <div class="overlay-stat-item">
+              <span class="overlay-stat-lbl">Personal Best</span>
+              <span id="go-best-score" class="overlay-stat-val" style="color: var(--warning);">0</span>
+            </div>
+            <div class="overlay-stat-item">
+              <span class="overlay-stat-lbl">Duration</span>
+              <span id="go-duration" class="overlay-stat-val" style="color: var(--secondary);">0s</span>
+            </div>
+          </div>
+          <div id="guest-prompt" style="display: none; margin-bottom: var(--space-4); font-size: var(--fs-xs); color: var(--warning); background: rgba(251,191,36,0.12); border: 1px solid var(--warning-glow); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm);">
+            💡 Guest session: <a href="/login.html" style="color: #fff; font-weight: 700;">Sign In</a> to save to Global Leaderboards!
+          </div>
+          <div style="display: flex; gap: var(--space-4);">
+            <button id="btn-restart" class="btn btn-primary">
+              Play Again
+            </button>
+            <a href="/index.html" class="btn btn-ghost">
+              Exit
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Controls Bar -->
+    <footer class="game-controls glass">
+      <button id="ctl-pause" class="btn btn-ghost btn-sm">⏸ Pause</button>
+      <button id="ctl-restart" class="btn btn-ghost btn-sm">🔄 Restart</button>
+      <button id="ctl-sound" class="btn btn-ghost btn-sm">🔊 Sound: On</button>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { auth } from '/js/core/auth.js';
+    import { TicTacToeGame } from '/js/games/TicTacToeGame.js';
+
+    const game = new TicTacToeGame('game-canvas');
+    game.start();
+
+    // Hook HUD score sync
+    const hudScore = document.getElementById('hud-score');
+    const hudBest = document.getElementById('hud-best');
+    if (hudBest) hudBest.textContent = game.bestScore;
+
+    const originalUpdate = game.update.bind(game);
+    game.update = function(dt) {
+      originalUpdate(dt);
+      if (hudScore && hudScore.textContent != this.score) {
+        hudScore.textContent = this.score;
+        hudScore.classList.add('score-bump');
+        setTimeout(() => hudScore.classList.remove('score-bump'), 250);
+      }
+      if (hudBest) hudBest.textContent = this.bestScore;
+    };
+
+    if (!auth.isLoggedIn()) {
+      const gp = document.getElementById('guest-prompt');
+      if (gp) gp.style.display = 'block';
+    }
+
+    // Overlays Buttons
+    document.getElementById('btn-start')?.addEventListener('click', () => game.play());
+    document.getElementById('btn-resume')?.addEventListener('click', () => game.resume());
+    document.getElementById('btn-restart')?.addEventListener('click', () => game.restart());
+
+    // Controls Bar
+    document.getElementById('ctl-pause')?.addEventListener('click', () => {
+      if (game.state === 'PLAYING') game.pause();
+      else if (game.state === 'PAUSED') game.resume();
+    });
+    document.getElementById('ctl-restart')?.addEventListener('click', () => game.restart());
+
+    let soundOn = true;
+    document.getElementById('ctl-sound')?.addEventListener('click', function() {
+      soundOn = !soundOn;
+      this.textContent = soundOn ? '🔊 Sound: On' : '🔇 Sound: Off';
+    });
+  </script>
+</body>
+</html>

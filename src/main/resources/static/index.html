@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameHub - Multi-Game Arcade Platform</title>
+
+  <!-- Typography Pairing: Orbitron, Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Neon Arcade Glass Design System -->
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="page-wrapper" style="padding-top: var(--space-4);">
+    <div class="container">
+      
+      <!-- 1. Hero Banner with 3D Tilt & Glass Shimmer -->
+      <section class="dashboard-hero glass reveal" id="hero-banner">
+        <span class="badge badge-primary floating" style="margin-bottom: var(--space-3);">
+          ⚡ B.Tech IT Minor Project • Spring Boot & HTML5 Canvas
+        </span>
+        <div class="hero-greeting" id="hero-greeting">Welcome to the Arcade</div>
+        <h1 class="hero-heading">
+          ONE ACCOUNT.<br>
+          <span style="color: var(--secondary); text-shadow: 0 0 24px var(--secondary-glow);">
+            FOUR LEGENDARY GAMES.
+          </span>
+        </h1>
+        <p class="hero-subtitle">
+          Play retro canvas games built on a unified engine, submit cryptographically verified scores, unlock achievements, and dominate the global leaderboards.
+        </p>
+
+        <!-- Player XP Bar (Updated dynamically if logged in) -->
+        <div class="xp-bar-wrap" id="hero-xp-wrap" style="max-width: 480px; margin-bottom: var(--space-6); display: none;">
+          <span class="badge badge-xp" id="hero-level-badge">LVL 1</span>
+          <div class="progress-track">
+            <div class="progress-fill" id="hero-xp-fill" style="width: 25%;"></div>
+          </div>
+          <span style="font-size: var(--fs-xs); color: var(--text-2); font-family: var(--font-mono);" id="hero-xp-text">0 / 100 XP</span>
+        </div>
+
+        <div class="hero-actions">
+          <a href="/games/snake.html" class="btn btn-primary btn-lg">🐍 Play Snake</a>
+          <a href="/games/flappy.html" class="btn btn-accent btn-lg">🪶 Play Flappy Bird</a>
+          <a href="/leaderboard.html" class="btn btn-outline btn-lg">🏆 Leaderboards</a>
+        </div>
+      </section>
+
+      <!-- 2. Platform Stats Row with Count-Up Animations -->
+      <div class="stats-grid stagger" style="margin-bottom: var(--space-8);">
+        <div class="glass stat-card" style="--i:1;">
+          <div class="stat-header">
+            <span>Playable Games</span>
+            <span>🎮</span>
+          </div>
+          <div class="stat-value" data-counter="4">4</div>
+          <div class="stat-subtitle">Handcrafted Canvas Games</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:2;">
+          <div class="stat-header">
+            <span>Global Players</span>
+            <span>👥</span>
+          </div>
+          <div class="stat-value" data-counter="128">128</div>
+          <div class="stat-subtitle">Verified Arcade Competitors</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:3;">
+          <div class="stat-header">
+            <span>Unlockable Badges</span>
+            <span>🎖️</span>
+          </div>
+          <div class="stat-value" data-counter="11">11</div>
+          <div class="stat-subtitle">Across All Titles</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:4;">
+          <div class="stat-header">
+            <span>Backend Security</span>
+            <span>🛡️</span>
+          </div>
+          <div class="stat-value" style="font-size: var(--fs-xl); color: var(--success);">ACTIVE</div>
+          <div class="stat-subtitle">Anti-Cheat & Rate Limit</div>
+        </div>
+      </div>
+
+      <!-- 3. Arcade Games Grid with Per-Game Identities -->
+      <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <h2>Arcade Library</h2>
+          <p style="color: var(--text-2); font-size: var(--fs-sm);">Powered by the shared fixed-timestep canvas engine.</p>
+        </div>
+        <span class="badge badge-active">● 4 Live Titles</span>
+      </div>
+
+      <div class="games-grid stagger">
+        <!-- Game 1: Snake -->
+        <article class="game-card glass" data-game="snake" style="--i:1;">
+          <div class="game-card__media">
+            <div class="game-card-art" style="background: radial-gradient(circle, rgba(74, 222, 128, 0.2), rgba(7, 6, 15, 0.95));">
+              🐍
+            </div>
+            <span class="badge badge-new">Classic</span>
+          </div>
+          <div class="game-card__body">
+            <h3>Snake</h3>
+            <p>Retro neon snake with food bursts, rare golden bonus apples, and dynamic velocity scaling.</p>
+            <div class="game-card__meta">
+              <div class="game-card__best">
+                Best Score <strong id="best-snake">0</strong>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/games/snake.html">Launch</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 2: Flappy Bird -->
+        <article class="game-card glass" data-game="flappy" style="--i:2;">
+          <div class="game-card__media">
+            <div class="game-card-art" style="background: radial-gradient(circle, rgba(34, 211, 238, 0.2), rgba(7, 6, 15, 0.95));">
+              🪶
+            </div>
+            <span class="badge badge-secondary">Physics</span>
+          </div>
+          <div class="game-card__body">
+            <h3>Flappy Bird</h3>
+            <p>Navigate challenging glowing pipe gates with momentum and smooth gravity physics.</p>
+            <div class="game-card__meta">
+              <div class="game-card__best">
+                Best Score <strong id="best-flappy">0</strong>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/games/flappy.html">Launch</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 3: 2048 -->
+        <article class="game-card glass" data-game="2048" style="--i:3;">
+          <div class="game-card__media">
+            <div class="game-card-art" style="background: radial-gradient(circle, rgba(251, 191, 36, 0.2), rgba(7, 6, 15, 0.95));">
+              🔢
+            </div>
+            <span class="badge badge-xp">Puzzle</span>
+          </div>
+          <div class="game-card__body">
+            <h3>2048</h3>
+            <p>Slide and merge matching numbered tiles to conquer the mathematical summit and reach 2048.</p>
+            <div class="game-card__meta">
+              <div class="game-card__best">
+                Best Score <strong id="best-2048">0</strong>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/games/2048.html">Launch</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 4: Tic Tac Toe -->
+        <article class="game-card glass" data-game="tictactoe" style="--i:4;">
+          <div class="game-card__media">
+            <div class="game-card-art" style="background: radial-gradient(circle, rgba(244, 114, 182, 0.2), rgba(7, 6, 15, 0.95));">
+              ❌
+            </div>
+            <span class="badge badge-primary">Strategy AI</span>
+          </div>
+          <div class="game-card__body">
+            <h3>Tic Tac Toe</h3>
+            <p>Fast-paced 3x3 tactical battle against an intelligent AI minimax opponent with glowing victory lines.</p>
+            <div class="game-card__meta">
+              <div class="game-card__best">
+                Best Score <strong id="best-tictactoe">0</strong>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/games/tictactoe.html">Launch</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- 4. Viva Voce Architecture Highlights (Glass Grid) -->
+      <div style="margin-top: var(--space-8); margin-bottom: var(--space-6);">
+        <h2>Architecture Highlights</h2>
+        <p style="color: var(--text-2); font-size: var(--fs-sm);">Engineering considerations designed for the B.Tech viva voce demonstration.</p>
+      </div>
+
+      <div class="grid-cards stagger">
+        <div class="glass card" style="--i:1;">
+          <h3 style="color: var(--secondary); margin-bottom: var(--space-2);">🛡️ Anti-Cheat Validation</h3>
+          <p style="font-size: var(--fs-sm); color: var(--text-1);">
+            Every score submission is validated server-side within an <code>@Transactional</code> boundary. Spring Boot checks score vs. duration against the game's registered maximum rate per second.
+          </p>
+        </div>
+
+        <div class="glass card" style="--i:2;">
+          <h3 style="color: var(--primary); margin-bottom: var(--space-2);">🕹️ Object-Oriented Engine</h3>
+          <p style="font-size: var(--fs-sm); color: var(--text-1);">
+            All games extend <code>GameBase.js</code>, inheriting fixed delta-time loops, High-DPI canvas scaling, automatic pause on tab blur, and unified score persistence hooks.
+          </p>
+        </div>
+
+        <div class="glass card" style="--i:3;">
+          <h3 style="color: var(--accent); margin-bottom: var(--space-2);">🔐 Stateless JWT Security</h3>
+          <p style="font-size: var(--fs-sm); color: var(--text-1);">
+            Protected endpoints authenticate requests via HMAC-SHA512 signed JWTs in the Authorization Bearer header, managed by custom Spring Security 6.x filters.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>GameHub • B.Tech IT Minor Project • Spring Boot & HTML5 Canvas Architecture</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar } from '/js/core/navbar.js';
+    import { auth } from '/js/core/auth.js';
+    import { initReveal, countUp, initTilt } from '/js/core/utils.js';
+
+    // 1. Initialize Navbar
+    initNavbar('games');
+
+    // 2. Initialize 3D Tilt on Hero Banner
+    const hero = document.getElementById('hero-banner');
+    initTilt(hero, 5);
+
+    // 3. Initialize Scroll Reveals
+    initReveal();
+
+    // 4. Animate Stat Tiles with countUp
+    document.querySelectorAll('[data-counter]').forEach((el) => {
+      const target = parseInt(el.getAttribute('data-counter'), 10);
+      countUp(el, target, 1200);
+    });
+
+    // 5. Update Hero if user is logged in
+    const user = auth.getUser();
+    if (user) {
+      const greetingEl = document.getElementById('hero-greeting');
+      if (greetingEl) {
+        greetingEl.textContent = `WELCOME BACK, ${user.displayName || user.username}!`;
+      }
+      const xpWrap = document.getElementById('hero-xp-wrap');
+      if (xpWrap) {
+        xpWrap.style.display = 'flex';
+        const levelBadge = document.getElementById('hero-level-badge');
+        const xpFill = document.getElementById('hero-xp-fill');
+        const xpText = document.getElementById('hero-xp-text');
+
+        const lvl = user.level || 1;
+        const xp = user.totalXp || 0;
+        const nextLvlXp = lvl * 100;
+        const pct = Math.min(100, Math.round((xp % 100)));
+
+        if (levelBadge) levelBadge.textContent = `LVL ${lvl}`;
+        if (xpFill) xpFill.style.width = `${pct}%`;
+        if (xpText) xpText.textContent = `${xp} / ${nextLvlXp} XP`;
+      }
+    }
+
+    // 6. Populate Local Best Scores in Game Cards
+    ['snake', 'flappy', '2048', 'tictactoe'].forEach((slug) => {
+      const best = localStorage.getItem(`gamehub_best_${slug}`) || '0';
+      const el = document.getElementById(`best-${slug}`);
+      if (el) el.textContent = parseInt(best, 10).toLocaleString();
+    });
+  </script>
+</body>
+</html>

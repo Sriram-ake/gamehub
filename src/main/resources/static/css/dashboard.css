@@ -1,0 +1,312 @@
+/* ==========================================================================
+   GameHub Design System - dashboard.css
+   Layout Shell, Dashboard Hero, Neon Glass Game Cards, Scrims & Per-Game Accents
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Dashboard App Shell (Section 3.1)
+   -------------------------------------------------------------------------- */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  background: rgba(13, 11, 28, 0.7);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 900;
+  color: var(--text-0);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+
+.topbar-logo .logo-icon {
+  color: var(--secondary);
+  text-shadow: 0 0 12px var(--secondary-glow);
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.topbar-nav a {
+  color: var(--text-1);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  transition: color var(--dur-fast);
+  padding: var(--space-2) 0;
+  position: relative;
+}
+
+.topbar-nav a:hover,
+.topbar-nav a.active {
+  color: var(--text-0);
+}
+
+.topbar-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.main-content {
+  flex: 1;
+  max-width: var(--content-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+/* --------------------------------------------------------------------------
+   2. Dashboard Hero Banner (Section 3.2)
+   -------------------------------------------------------------------------- */
+.dashboard-hero {
+  position: relative;
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-12);
+  margin-bottom: var(--space-8);
+  background:
+    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+    radial-gradient(circle at 15% 70%, rgba(34, 211, 238, 0.18) 0%, transparent 50%),
+    var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.dashboard-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.hero-greeting {
+  font-size: var(--fs-sm);
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.hero-heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 900;
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  color: var(--text-1);
+  font-size: var(--fs-base);
+  max-width: 600px;
+  margin-bottom: var(--space-6);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   3. Anatomy of the Game Card (Section 3.3)
+   -------------------------------------------------------------------------- */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-12);
+}
+
+.game-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--dur-base) var(--ease-out);
+  border-radius: var(--radius-lg);
+  padding: 0;
+}
+
+/* Glow border that fades in on hover (opacity only for 60 FPS) */
+.game-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--game-accent), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--dur-base);
+  pointer-events: none;
+}
+
+.game-card:hover {
+  transform: translateY(-6px);
+}
+
+.game-card:hover::before {
+  opacity: 1;
+}
+
+.game-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease-out);
+}
+
+.game-card:hover img {
+  transform: scale(1.08);
+}
+
+.game-card-art {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  transition: transform 600ms var(--ease-out);
+}
+
+.game-card:hover .game-card-art {
+  transform: scale(1.1);
+}
+
+/* Gradient scrim so text stays readable */
+.game-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg-0) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.game-card__media .badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 2;
+}
+
+.game-card__body {
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.game-card__body h3 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  color: var(--text-0);
+}
+
+.game-card__body p {
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  margin-bottom: var(--space-4);
+  flex: 1;
+}
+
+.game-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.game-card__best {
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+
+.game-card__best strong {
+  display: block;
+  font-size: var(--fs-base);
+  color: var(--secondary);
+  font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------------------------------
+   4. Per-Game Identity Colors (Section 4.2)
+   -------------------------------------------------------------------------- */
+[data-game='flappy']    { --game-accent: #22d3ee; --game-accent-glow: rgba(34, 211, 238, 0.45); }
+[data-game='snake']     { --game-accent: #4ade80; --game-accent-glow: rgba(74, 222, 128, 0.45); }
+[data-game='2048']      { --game-accent: #fbbf24; --game-accent-glow: rgba(251, 191, 36, 0.45); }
+[data-game='tictactoe'] { --game-accent: #f472b6; --game-accent-glow: rgba(244, 114, 182, 0.45); }
+
+/* --------------------------------------------------------------------------
+   5. Mobile Responsiveness
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .topbar {
+    padding: 0 var(--space-4);
+  }
+
+  .main-content {
+    padding: var(--space-4) var(--space-4) 80px;
+  }
+
+  .dashboard-hero {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - GameHub</title>
+
+  <!-- Typography Pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="page-wrapper" style="justify-content: center; align-items: center; min-height: calc(100vh - var(--topbar-h));">
+    <div class="container container-narrow">
+      <div class="glass-strong card reveal" style="padding: var(--space-8);">
+        <div style="text-align: center; margin-bottom: var(--space-6);">
+          <div style="font-size: 2.8rem; margin-bottom: var(--space-2);">🚀</div>
+          <h1 style="font-family: var(--font-display); font-size: var(--fs-xl); letter-spacing: 0.05em; margin-bottom: var(--space-2);">
+            Join GameHub
+          </h1>
+          <p style="color: var(--text-1); font-size: var(--fs-sm);">
+            Create your player profile and start climbing the leaderboards
+          </p>
+        </div>
+
+        <div id="form-alert" class="badge" style="display: none; width: 100%; padding: var(--space-3); background: rgba(251,113,133,0.15); border: 1px solid var(--danger); color: #fff; margin-bottom: var(--space-4); border-radius: var(--radius-sm);"></div>
+
+        <form id="register-form">
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-input" placeholder="3-30 chars (e.g. cyber_knight)" minlength="3" maxlength="30" required autocomplete="username">
+            <span id="err-username" style="display: none; color: var(--danger); font-size: var(--fs-xs); margin-top: 4px;"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="player@domain.com" required autocomplete="email">
+            <span id="err-email" style="display: none; color: var(--danger); font-size: var(--fs-xs); margin-top: 4px;"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="displayName" class="form-label">Display Name (Optional)</label>
+            <input type="text" id="displayName" name="displayName" class="form-input" placeholder="Nickname shown on leaderboards" maxlength="50">
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-input" placeholder="At least 8 characters" minlength="8" required autocomplete="new-password">
+            <span id="err-password" style="display: none; color: var(--danger); font-size: var(--fs-xs); margin-top: 4px;"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Repeat your password" minlength="8" required autocomplete="new-password">
+            <span id="err-confirmPassword" style="display: none; color: var(--danger); font-size: var(--fs-xs); margin-top: 4px;"></span>
+          </div>
+
+          <button type="submit" id="btn-submit" class="btn btn-primary btn-block btn-lg" style="margin-top: var(--space-6);">
+            <span id="btn-text">Create Player Account</span>
+            <span id="btn-spinner" class="spinner" style="display: none;"></span>
+          </button>
+        </form>
+
+        <div style="margin-top: var(--space-6); text-align: center; border-top: 1px solid var(--glass-border); padding-top: var(--space-4);">
+          <p style="color: var(--text-1); font-size: var(--fs-sm);">
+            Already have an account? <a href="/login.html" style="font-weight: 600; color: var(--secondary);">Sign In</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initNavbar } from '/js/core/navbar.js';
+    import { auth } from '/js/core/auth.js';
+    import { api } from '/js/core/api.js';
+    import { toast } from '/js/core/toast.js';
+
+    initNavbar();
+
+    if (auth.isLoggedIn()) {
+      window.location.href = '/index.html';
+    }
+
+    const form = document.getElementById('register-form');
+    const submitBtn = document.getElementById('btn-submit');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const alertBox = document.getElementById('form-alert');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+
+      ['username', 'email', 'password', 'confirmPassword'].forEach(f => {
+        const errEl = document.getElementById(`err-${f}`);
+        if (errEl) {
+          errEl.style.display = 'none';
+          errEl.textContent = '';
+        }
+      });
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const displayName = document.getElementById('displayName').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        const errEl = document.getElementById('err-confirmPassword');
+        errEl.textContent = 'Passwords do not match.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.style.display = 'none';
+      btnSpinner.style.display = 'inline-block';
+
+      try {
+        const response = await api.post('/auth/register', {
+          username,
+          email,
+          displayName: displayName || username,
+          password
+        });
+
+        auth.setSession(response);
+        toast.success(`Welcome to GameHub, ${response.user.displayName || response.user.username}!`);
+
+        const pendingScore = auth.getPendingScore();
+        if (pendingScore) {
+          try {
+            await api.post('/scores', pendingScore);
+            auth.clearPendingScore();
+          } catch {}
+        }
+
+        setTimeout(() => {
+          window.location.href = '/index.html';
+        }, 500);
+      } catch (err) {
+        if (err.fieldErrors) {
+          for (const [field, msg] of Object.entries(err.fieldErrors)) {
+            const el = document.getElementById(`err-${field}`);
+            if (el) {
+              el.textContent = msg;
+              el.style.display = 'block';
+            }
+          }
+        }
+        alertBox.textContent = err.message || 'Registration failed. Please check the inputs.';
+        alertBox.style.display = 'block';
+
+        submitBtn.disabled = false;
+        btnText.style.display = 'inline';
+        btnSpinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

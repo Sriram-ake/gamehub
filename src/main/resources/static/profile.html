@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Profile - GameHub Arcade</title>
+
+  <!-- Typography Pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <style>
+    .profile-hero-card {
+      padding: var(--space-8);
+      display: flex;
+      gap: var(--space-8);
+      align-items: center;
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+    }
+    .profile-avatar-lg {
+      width: 96px;
+      height: 96px;
+      border-radius: var(--radius-full);
+      border: 3px solid var(--secondary);
+      box-shadow: 0 0 25px var(--secondary-glow);
+      background: var(--bg-2);
+      object-fit: cover;
+    }
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .ach-card {
+      padding: var(--space-4) var(--space-6);
+      display: flex;
+      gap: var(--space-4);
+      align-items: center;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .ach-card:hover {
+      transform: translateY(-3px);
+    }
+    .ach-card.unlocked {
+      border-color: rgba(251, 191, 36, 0.4);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%);
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.15);
+    }
+    .ach-card.locked {
+      opacity: 0.45;
+      filter: grayscale(0.9);
+    }
+    .ach-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+      
+      <!-- Profile Header Glass Card -->
+      <div class="glass-strong card profile-hero-card reveal">
+        <img id="p-avatar" src="/assets/images/default-avatar.svg" alt="Avatar" class="profile-avatar-lg">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2);">
+            <h1 id="p-name" style="font-family: var(--font-display); font-size: var(--fs-xl); letter-spacing: -0.01em;">
+              Player
+            </h1>
+            <span id="p-badge-role" class="badge badge-primary">PLAYER</span>
+          </div>
+          <p id="p-email" style="color: var(--text-2); font-size: var(--fs-sm); margin-bottom: var(--space-4);">
+            player@gamehub.local
+          </p>
+
+          <!-- Level & XP Bar -->
+          <div style="max-width: 480px;">
+            <div style="display: flex; justify-content: space-between; font-size: var(--fs-xs); font-weight: 700; margin-bottom: var(--space-2);">
+              <span id="p-level" style="color: var(--warning); font-family: var(--font-display);">LVL 1</span>
+              <span id="p-xp-text" style="color: var(--text-2); font-family: var(--font-mono);">0 / 100 XP</span>
+            </div>
+            <div class="progress-track">
+              <div id="p-xp-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid stagger">
+        <div class="glass stat-card" style="--i:1;">
+          <div class="stat-header">
+            <span>Total Score</span>
+            <span>⚡</span>
+          </div>
+          <div class="stat-value" id="stat-total-score">0</div>
+          <div class="stat-subtitle">Combined Arcade Points</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:2;">
+          <div class="stat-header">
+            <span>Games Played</span>
+            <span>🕹️</span>
+          </div>
+          <div class="stat-value" id="stat-games-played">0</div>
+          <div class="stat-subtitle">Total Game Sessions</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:3;">
+          <div class="stat-header">
+            <span>Achievements</span>
+            <span>🎖️</span>
+          </div>
+          <div class="stat-value" id="stat-achievements">0 / 11</div>
+          <div class="stat-subtitle">Badges Unlocked</div>
+        </div>
+
+        <div class="glass stat-card" style="--i:4;">
+          <div class="stat-header">
+            <span>Current Rank</span>
+            <span>👑</span>
+          </div>
+          <div class="stat-value" id="stat-rank" style="color: var(--secondary);">#1</div>
+          <div class="stat-subtitle">Global Leaderboard</div>
+        </div>
+      </div>
+
+      <!-- Achievements Section -->
+      <div style="margin-bottom: var(--space-4); display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <h2>Arcade Trophies & Badges</h2>
+          <p style="color: var(--text-2); font-size: var(--fs-sm);">Unlock achievements across games to earn prestige and XP.</p>
+        </div>
+      </div>
+
+      <div class="achievements-grid" id="achievements-container">
+        <!-- Rendered by JavaScript -->
+        <div class="glass card" style="text-align: center; padding: var(--space-8); grid-column: 1 / -1; color: var(--text-2);">
+          <span class="spinner" style="margin-right: 8px;"></span> Loading achievement trophies...
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>GameHub • B.Tech IT Minor Project • Spring Boot & HTML5 Canvas</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar } from '/js/core/navbar.js';
+    import { auth } from '/js/core/auth.js';
+    import { api } from '/js/core/api.js';
+    import { countUp } from '/js/core/utils.js';
+
+    initNavbar('profile');
+
+    if (!auth.isLoggedIn()) {
+      window.location.href = '/login.html?returnUrl=/profile.html';
+    }
+
+    async function loadProfile() {
+      try {
+        const user = await api.get('/users/me');
+        if (user) {
+          document.getElementById('p-name').textContent = user.displayName || user.username;
+          document.getElementById('p-email').textContent = user.email;
+          document.getElementById('p-badge-role').textContent = user.role;
+
+          const lvl = user.level || 1;
+          const xp = user.totalXp || 0;
+          const nextLvlXp = lvl * 100;
+          const pct = Math.min(100, Math.round((xp % 100)));
+
+          document.getElementById('p-level').textContent = `LVL ${lvl}`;
+          document.getElementById('p-xp-text').textContent = `${xp} / ${nextLvlXp} XP`;
+          document.getElementById('p-xp-fill').style.width = `${pct}%`;
+        }
+
+        // Load stats
+        const stats = await api.get('/users/me/stats');
+        if (stats) {
+          countUp(document.getElementById('stat-total-score'), stats.totalScore || 0);
+          countUp(document.getElementById('stat-games-played'), stats.gamesPlayed || 0);
+          document.getElementById('stat-achievements').textContent = `${stats.unlockedAchievementsCount || 0} / ${stats.totalAchievementsCount || 11}`;
+          document.getElementById('stat-rank').textContent = stats.globalRank ? `#${stats.globalRank}` : '-';
+        }
+
+        // Load achievements
+        const achievements = await api.get('/achievements/me');
+        const achContainer = document.getElementById('achievements-container');
+
+        if (achievements && achievements.length > 0) {
+          achContainer.innerHTML = achievements.map((ach) => `
+            <div class="glass card ach-card ${ach.unlocked ? 'unlocked' : 'locked'}">
+              <div class="ach-icon">${ach.unlocked ? (ach.icon || '🎖️') : '🔒'}</div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <h4 style="font-size: var(--fs-sm); font-weight: 700; color: var(--text-0);">${ach.title}</h4>
+                  <span class="badge badge-xp">+${ach.xpReward} XP</span>
+                </div>
+                <p style="font-size: var(--fs-xs); color: var(--text-1); line-height: 1.3;">
+                  ${ach.description}
+                </p>
+                ${ach.unlocked ? `
+                  <div style="font-size: 0.65rem; color: var(--success); margin-top: 4px; font-weight: 600;">
+                    ✓ UNLOCKED ${ach.unlockedAt ? ach.unlockedAt.split('T')[0] : ''}
+                  </div>
+                ` : `
+                  <div style="font-size: 0.65rem; color: var(--text-2); margin-top: 4px;">
+                    LOCKED
+                  </div>
+                `}
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load profile details:', err);
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

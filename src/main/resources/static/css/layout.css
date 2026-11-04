@@ -1,0 +1,194 @@
+/* ==========================================================================
+   GameHub Layout - layout.css
+   Grid, Flexbox, Frosted Glass Navbar & Container Utilities
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container-narrow {
+  max-width: 480px;
+}
+
+.container-wide {
+  max-width: 1400px;
+}
+
+/* Page Wrapper */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8) 0 var(--space-16);
+}
+
+/* Header & Shared Glass Navbar */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(13, 11, 28, 0.78);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--glass-border);
+  transition: all var(--dur-base) var(--ease-out);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-h);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--text-0);
+  text-decoration: none;
+}
+
+.nav-brand .brand-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #ffffff;
+  box-shadow: 0 0 14px var(--primary-glow);
+}
+
+.nav-brand span.glow {
+  color: var(--secondary);
+  text-shadow: 0 0 12px var(--secondary-glow);
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: var(--space-6);
+}
+
+.nav-item a {
+  color: var(--text-1);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition: all var(--dur-fast) var(--ease-out);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+
+.nav-item a:hover {
+  color: var(--text-0);
+  background: var(--glass);
+}
+
+.nav-item a.active {
+  color: var(--text-0);
+  background: var(--glass-strong);
+  border-bottom: 2px solid var(--secondary);
+}
+
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* User Pill in Navbar */
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 4px var(--space-3) 4px 6px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+
+.user-profile-badge:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 0 12px var(--secondary-glow);
+  background: var(--glass-strong);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-2);
+  border: 1.5px solid var(--secondary);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-info .username {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--text-0);
+}
+
+.user-info .user-level-badge {
+  font-size: var(--fs-xs);
+  color: var(--warning);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--glass-border);
+  background: rgba(13, 11, 28, 0.6);
+  backdrop-filter: blur(10px);
+  padding: var(--space-8) 0;
+  margin-top: auto;
+  text-align: center;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+
+/* Grid Layouts */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-menu {
+    gap: var(--space-2);
+  }
+  .nav-item a span.nav-text {
+    display: none;
+  }
+  .container {
+    padding: 0 var(--space-4);
+  }
+}

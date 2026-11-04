@@ -1,0 +1,133 @@
+/* ==========================================================================
+   GameHub Design System - animations.css
+   Hardware-Accelerated Keyframes, Easing, Stagger & Reduced Motion
+   ========================================================================== */
+
+/* Entrance: fade and rise (Section 2.3) */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+
+/* Stagger children: <div class='stagger'><div class='card' style='--i:1'> */
+.stagger > * {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Loading skeleton shimmer */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+
+.skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--glass) 25%, var(--glass-strong) 50%, var(--glass) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* Spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--secondary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Soft glow pulse for the primary call to action */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* Floating hero elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.floating {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Toast slide in and out */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+/* Achievement unlock pop */
+@keyframes pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.pop-in {
+  animation: pop 0.4s var(--ease-spring) both;
+}
+
+/* Number count-up highlight */
+@keyframes number-bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); color: var(--secondary); }
+  100% { transform: scale(1); }
+}
+
+.bump,
+.score-bump {
+  display: inline-block;
+  animation: number-bump 0.25s var(--ease-spring);
+}
+
+/* Accessibility: turn motion off for users who ask */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

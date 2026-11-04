@@ -1,0 +1,491 @@
+/* ==========================================================================
+   GameHub Component Library - components.css
+   Concept: Neon Arcade Glass
+   Glass Surfaces, Glow-Hover Buttons, Badges, Toasts, Inputs & Stat Tiles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. The Glass Recipe (Section 1.5)
+   -------------------------------------------------------------------------- */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass { background: var(--bg-2); }
+  .glass-strong { background: var(--bg-1); }
+}
+
+.card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   2. Buttons with Glow and Press Feedback (Section 2.4)
+   -------------------------------------------------------------------------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-0);
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.25;
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* Primary Button: Signature Brand Gradient with Glow Pseudo-Element */
+.btn-primary {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  isolation: isolate;
+  font-weight: 700;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--gradient-brand);
+  filter: blur(14px);
+  opacity: 0.45;
+  transition: opacity var(--dur-base);
+}
+
+.btn-primary:hover::after {
+  opacity: 0.9;
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-0);
+}
+
+.btn-ghost:hover {
+  background: var(--glass-strong);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Accent Button (Cyan) */
+.btn-accent {
+  background: var(--secondary);
+  color: var(--bg-0);
+  font-weight: 700;
+  isolation: isolate;
+}
+
+.btn-accent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--secondary);
+  filter: blur(12px);
+  opacity: 0.4;
+  transition: opacity var(--dur-base);
+}
+
+.btn-accent:hover::after {
+  opacity: 0.85;
+}
+
+/* Outline Button */
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-0);
+}
+
+.btn-outline:hover {
+  background: var(--glass);
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+/* Danger Button */
+.btn-danger {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  filter: brightness(1.15);
+}
+
+/* Sizes */
+.btn-sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--fs-lg);
+  border-radius: var(--radius-lg);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-retro {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   3. Inputs & Forms
+   -------------------------------------------------------------------------- */
+.form-group {
+  margin-bottom: var(--space-4);
+  text-align: left;
+}
+
+.form-label,
+.input-label {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text-1);
+  margin-bottom: var(--space-2);
+}
+
+.form-input,
+.input-field {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-0);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+
+.form-input:focus,
+.input-field:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+.form-input::placeholder,
+.input-field::placeholder {
+  color: var(--text-2);
+}
+
+/* --------------------------------------------------------------------------
+   4. Badges & Pills
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  line-height: 1.2;
+}
+
+.badge-primary {
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid var(--primary-glow);
+  color: #c4b5fd;
+}
+
+.badge-secondary {
+  background: rgba(34, 211, 238, 0.15);
+  border: 1px solid var(--secondary-glow);
+  color: var(--secondary);
+}
+
+.badge-xp {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid var(--warning-glow);
+  color: var(--warning);
+}
+
+.badge-active {
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: var(--success);
+}
+
+.badge-new {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   5. XP & Level Progress Bar
+   -------------------------------------------------------------------------- */
+.xp-bar-wrap,
+.xp-bar-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-2);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.progress-fill,
+.xp-bar-fill {
+  height: 100%;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-full);
+  transition: width 0.8s var(--ease-out);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* --------------------------------------------------------------------------
+   6. Stat Cards
+   -------------------------------------------------------------------------- */
+.stats-grid,
+.stats-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.stat-card,
+.stat-metric-card {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.stat-value,
+.stat-metric-val {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 900;
+  color: var(--text-0);
+  line-height: 1.1;
+}
+
+.stat-subtitle,
+.stat-metric-label {
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+
+/* --------------------------------------------------------------------------
+   7. Toast Notifications
+   -------------------------------------------------------------------------- */
+#toast-container {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-6);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  pointer-events: none;
+  max-width: 380px;
+  width: 90vw;
+}
+
+.toast {
+  pointer-events: auto;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: rgba(13, 11, 28, 0.92);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: toast-in var(--dur-base) var(--ease-out);
+  transition: transform var(--dur-fast), opacity var(--dur-fast);
+}
+
+.toast.toast-hiding {
+  animation: toast-out var(--dur-fast) ease forwards;
+}
+
+.toast-success { border-left: 4px solid var(--success); }
+.toast-error   { border-left: 4px solid var(--danger); }
+.toast-warning { border-left: 4px solid var(--warning); }
+.toast-info    { border-left: 4px solid var(--secondary); }
+
+.toast-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--text-0);
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  font-size: var(--fs-xs);
+  color: var(--text-1);
+}
+
+/* --------------------------------------------------------------------------
+   8. Tables (Leaderboards, Scores)
+   -------------------------------------------------------------------------- */
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+}
+
+.game-table,
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--fs-sm);
+}
+
+.game-table th,
+.lb-table th {
+  padding: var(--space-4) var(--space-6);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-2);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.game-table td,
+.lb-table td {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-1);
+  vertical-align: middle;
+}
+
+.game-table tr:last-child td,
+.lb-table tr:last-child td {
+  border-bottom: none;
+}
+
+.game-table tr:hover td,
+.lb-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.game-table tr.current-user-row,
+.lb-table tr.highlight-user {
+  background: rgba(34, 211, 238, 0.08);
+  border-left: 3px solid var(--secondary);
+}
+
+.game-table tr.current-user-row td,
+.lb-table tr.highlight-user td {
+  color: var(--text-0);
+  font-weight: 600;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: var(--fs-xs);
+  font-family: var(--font-display);
+}
+
+.rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; box-shadow: 0 0 12px var(--warning-glow); }
+.rank-2 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: #000; }
+.rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #fff; }
